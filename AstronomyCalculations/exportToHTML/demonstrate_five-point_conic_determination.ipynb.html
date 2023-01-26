@@ -1,0 +1,494 @@
+<html>
+<head>
+<title>demonstrate_five-point_conic_determination.ipynb</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #808080;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #cc7832;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+.ls0 { height: 1px; border-width: 0; color: #4d4d4d; background-color:#4d4d4d}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+demonstrate_five-point_conic_determination.ipynb</font>
+</center></td></tr></table>
+<pre><span class="s0">#%% md 
+</span><span class="s1"># Determining a Conic Section from Five Points 
+ 
+## Plan 
+In each case, create a conic section from chosen parameters such as semi axes or focal lengths. Derive the equation. 
+Then, show that five points chosen on that curve yield the function back using the determinants of the minor matrices of 
+each term in the matrix equation formed by writing the standard form of the equation for conic sections for each point. 
+ 
+*** 
+## Ellipse 
+### Choose semi axes 
+$a = 10, \: b = 8$ 
+ 
+### Equation for the x-y coordinates of this ellipse 
+$\frac{x^2}{10^2} + \frac{y^2}{8^2} = 1$ 
+ 
+### Convert into standard conic form 
+$ A x^2 + B x y + C y^2 + D x + E y + F = 0 $ 
+ 
+$64 x^2 + 100 y^2 - 6400 = 0$ 
+$\rightarrow A = 64, \: B = 0, \: C = 100, \: D = 0, \: E = 0, \: F = -6400 $ 
+ <hr class="ls0"></span><span class="s0">#%% 
+</span>
+<span class="s0">#</span>
+<span class="s0">## Plot ellipse</span>
+<span class="s0">#</span>
+<span class="s2">import </span><span class="s1">matplotlib.pyplot </span><span class="s2">as </span><span class="s1">plt</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+<span class="s2">from </span><span class="s1">draw_orbits </span><span class="s2">import </span><span class="s1">ellipse</span>
+
+<span class="s0"># Calculate ellipse values based on semi axes and an array of angles</span>
+<span class="s1">number_of_points = </span><span class="s3">1000</span>
+<span class="s1">angles = np.linspace(</span><span class="s3">0.</span><span class="s2">, </span><span class="s3">2</span><span class="s1">*np.pi</span><span class="s2">, </span><span class="s1">num=number_of_points)</span>
+<span class="s1">semimajor_axis = </span><span class="s3">10.</span>
+<span class="s1">semiminor_axis = </span><span class="s3">8.</span>
+<span class="s1">x_values</span><span class="s2">, </span><span class="s1">y_values = ellipse(angles</span><span class="s2">, </span><span class="s1">semimajor_axis=semimajor_axis</span><span class="s2">, </span><span class="s1">semiminor_axis=semiminor_axis)</span>
+
+<span class="s0"># Choose plot parameters</span>
+<span class="s1">conic_color = </span><span class="s4">'blue'</span>
+<span class="s1">label_fontsize = </span><span class="s3">18</span>
+<span class="s1">label_x_shift = max(x_values)*</span><span class="s3">0.1</span>
+<span class="s1">label_y_shift = max(y_values)*</span><span class="s3">0.1</span>
+
+<span class="s0"># Plot ellipse</span>
+<span class="s1">plt.plot(x_values</span><span class="s2">, </span><span class="s1">y_values</span><span class="s2">, </span><span class="s1">color=conic_color)</span>
+<span class="s1">plt.xlim(min(x_values)-</span><span class="s3">5</span><span class="s1">*label_x_shift</span><span class="s2">, </span><span class="s1">max(x_values)+</span><span class="s3">5</span><span class="s1">*label_x_shift)</span>
+<span class="s1">plt.ylim(min(y_values)-</span><span class="s3">5</span><span class="s1">*label_y_shift</span><span class="s2">, </span><span class="s1">max(y_values)+</span><span class="s3">5</span><span class="s1">*label_y_shift)</span>
+
+<span class="s0"># Label ellipse</span>
+<span class="s1">plt.plot([</span><span class="s3">0</span><span class="s2">,</span><span class="s1">semimajor_axis]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'black'</span><span class="s2">, </span><span class="s1">linestyle=</span><span class="s4">'--'</span><span class="s1">)</span>
+<span class="s1">plt.text(</span><span class="s3">0.5</span><span class="s1">*semimajor_axis</span><span class="s2">, </span><span class="s1">label_y_shift</span><span class="s2">, </span><span class="s4">r'$a = {} $'</span><span class="s1">.format(int(semimajor_axis))</span><span class="s2">,</span>
+         <span class="s1">fontsize=label_fontsize</span><span class="s2">, </span><span class="s1">ha=</span><span class="s4">'center'</span><span class="s1">)</span>
+<span class="s1">plt.plot([</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">0</span><span class="s2">, </span><span class="s1">semiminor_axis]</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'black'</span><span class="s2">, </span><span class="s1">linestyle=</span><span class="s4">'--'</span><span class="s1">)</span>
+<span class="s1">plt.text(-label_x_shift</span><span class="s2">, </span><span class="s3">0.5</span><span class="s1">*semiminor_axis</span><span class="s2">, </span><span class="s4">r'$b = {} $'</span><span class="s1">.format(int(semiminor_axis))</span><span class="s2">,</span>
+         <span class="s1">fontsize=label_fontsize</span><span class="s2">, </span><span class="s1">ha=</span><span class="s4">'right'</span><span class="s2">, </span><span class="s1">va=</span><span class="s4">'center'</span><span class="s1">)</span>
+<span class="s0">#plt.text(sum(x_values[1:])/2+0.25*label_x_shift, sum(y_values[1:])/2, r'$b$', fontsize=label_fontsize)</span>
+
+<span class="s0"># Plot and label two points on ellipse</span>
+<span class="s1">plt.scatter(semimajor_axis</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.scatter(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">semiminor_axis</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.text(semimajor_axis+label_x_shift</span><span class="s2">, </span><span class="s1">label_y_shift</span><span class="s2">, </span><span class="s4">r'({}, 0)'</span><span class="s1">.format(int(semimajor_axis))</span><span class="s2">,</span>
+         <span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.text(label_x_shift</span><span class="s2">, </span><span class="s1">semiminor_axis+label_y_shift</span><span class="s2">, </span><span class="s4">r'(0, {})'</span><span class="s1">.format(int(semiminor_axis))</span><span class="s2">,</span>
+         <span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+
+<span class="s1">plt.show()</span>
+<hr class="ls0"><span class="s0">#%% md 
+</span>
+<span class="s1">### Solve for general conic coefficients 
+#### (ignore $B$, $D$, &amp; $E$ since ellipse is centered and aligned with x-, y-axes) 
+ 
+$ \begin{align*} A x^2 + C y^2 + F &amp;= 0 \\ A 10^2 + C 0^2 + F &amp;= 0 \\ A 0^2 + C 8^2 + F &amp;= 0\end{align*}$ 
+ 
+$ \rightarrow \begin{pmatrix}  x^2 &amp; y^2 &amp; 1 \\ 100 &amp; 0 &amp; 1 \\ 0 &amp; 64 &amp; 1 \\ \end{pmatrix} \begin{pmatrix} A \\ C \\ F \\ \end{pmatrix}  = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}$ 
+ 
+$ \rightarrow \det \begin{pmatrix} x^2 &amp; y^2 &amp; 1 \\ 100 &amp; 0 &amp; 1 \\ 0 &amp; 64 &amp; 1 \\ \end{pmatrix} = 0 $ 
+ 
+$ \rightarrow \det \begin{pmatrix} 0 &amp; 1 \\ 64 &amp; 1 \\ \end{pmatrix} x^2 + \det \begin{pmatrix} 1 &amp; 100 \\ 1 &amp; 0 \\ \end{pmatrix} y^2 + \det \begin{pmatrix} 100 &amp; 0 \\ 0 &amp; 64 \end{pmatrix} = 0 $ 
+ 
+$ \rightarrow A = \det \begin{pmatrix} 0 &amp; 1 \\ 64 &amp; 1 \\ \end{pmatrix} = -64, 
+              C = \det \begin{pmatrix} 1 &amp; 100 \\ 1 &amp; 0 \\ \end{pmatrix} = -100, 
+              F = \det \begin{pmatrix} 100 &amp; 0 \\ 0 &amp; 64 \\ \end{pmatrix} = 6400 $ 
+ <hr class="ls0"></span><span class="s0">#%% md 
+</span>
+<span class="s1">*** 
+## Circle 
+ 
+### Choose radius 
+$ r = 10 $ 
+ 
+### Equation for the x-y coordinates of this circle 
+$ x^2 + y^2 = 10^2 $ 
+ 
+### Convert into standard conic form 
+$ A x^2 + B x y + C y^2 + D x + E y + F = 0 $ 
+ 
+$ x^2 + y^2 - 100 = 0 $ 
+$\rightarrow A = 1, \: B = 0, \: C = 1, \: D = 0, \: E = 0, \: F = -100 $ 
+ <hr class="ls0"></span><span class="s0">#%% 
+</span>
+<span class="s0">#</span>
+<span class="s0">## Plot circle</span>
+<span class="s0">#</span>
+<span class="s2">import </span><span class="s1">matplotlib.pyplot </span><span class="s2">as </span><span class="s1">plt</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+<span class="s2">from </span><span class="s1">draw_orbits </span><span class="s2">import </span><span class="s1">circle</span>
+
+<span class="s0"># Calculate circle values based on semi axes and an array of angles</span>
+<span class="s1">number_of_points = </span><span class="s3">1000</span>
+<span class="s1">angles = np.linspace(</span><span class="s3">0.</span><span class="s2">, </span><span class="s3">2</span><span class="s1">*np.pi</span><span class="s2">, </span><span class="s1">num=number_of_points)</span>
+<span class="s1">radius = </span><span class="s3">10.</span>
+<span class="s1">x_values</span><span class="s2">, </span><span class="s1">y_values = circle(angles</span><span class="s2">, </span><span class="s1">radius=radius)</span>
+
+<span class="s0"># Choose plot parameters</span>
+<span class="s1">conic_color = </span><span class="s4">'blue'</span>
+<span class="s1">label_fontsize = </span><span class="s3">18</span>
+<span class="s1">label_x_shift = max(x_values)*</span><span class="s3">0.1</span>
+<span class="s1">label_y_shift = max(y_values)*</span><span class="s3">0.1</span>
+
+<span class="s0"># Plot circle</span>
+<span class="s1">plt.plot(x_values</span><span class="s2">, </span><span class="s1">y_values</span><span class="s2">, </span><span class="s1">color=conic_color)</span>
+<span class="s1">plt.axis(</span><span class="s4">'square'</span><span class="s1">)</span>
+<span class="s1">plt.xlim(min(x_values)-</span><span class="s3">6</span><span class="s1">*label_x_shift</span><span class="s2">, </span><span class="s1">max(x_values)+</span><span class="s3">6</span><span class="s1">*label_x_shift)</span>
+<span class="s1">plt.ylim(min(y_values)-</span><span class="s3">6</span><span class="s1">*label_y_shift</span><span class="s2">, </span><span class="s1">max(y_values)+</span><span class="s3">6</span><span class="s1">*label_y_shift)</span>
+
+<span class="s0"># Label circle</span>
+<span class="s1">plt.plot([</span><span class="s3">0</span><span class="s2">,</span><span class="s1">radius]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'black'</span><span class="s2">, </span><span class="s1">linestyle=</span><span class="s4">'--'</span><span class="s1">)</span>
+<span class="s1">plt.text(</span><span class="s3">0.5</span><span class="s1">*radius</span><span class="s2">, </span><span class="s1">label_y_shift</span><span class="s2">, </span><span class="s4">r'$r = {} $'</span><span class="s1">.format(int(radius))</span><span class="s2">,</span>
+         <span class="s1">fontsize=label_fontsize</span><span class="s2">, </span><span class="s1">ha=</span><span class="s4">'center'</span><span class="s1">)</span>
+<span class="s0">#plt.text(sum(x_values[1:])/2+0.25*label_x_shift, sum(y_values[1:])/2, r'$b$', fontsize=label_fontsize)</span>
+
+<span class="s0"># Plot and label five points on circle</span>
+<span class="s1">plt.scatter(radius</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.text(radius+label_x_shift</span><span class="s2">, </span><span class="s1">label_y_shift</span><span class="s2">, </span><span class="s4">r'({}, 0)'</span><span class="s1">.format(int(radius))</span><span class="s2">,</span>
+         <span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.scatter(</span><span class="s3">0.8</span><span class="s1">*radius</span><span class="s2">, </span><span class="s3">0.6</span><span class="s1">*radius</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.text(</span><span class="s3">0.8</span><span class="s1">*radius+label_x_shift</span><span class="s2">, </span><span class="s3">0.6</span><span class="s1">*radius+label_y_shift</span><span class="s2">,</span>
+         <span class="s4">r'({}, {})'</span><span class="s1">.format(int(</span><span class="s3">0.8</span><span class="s1">*radius)</span><span class="s2">, </span><span class="s1">int(</span><span class="s3">0.6</span><span class="s1">*radius))</span><span class="s2">,</span>
+         <span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.scatter(</span><span class="s3">0.6</span><span class="s1">*radius</span><span class="s2">, </span><span class="s3">0.8</span><span class="s1">*radius</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.text(</span><span class="s3">0.6</span><span class="s1">*radius+label_x_shift</span><span class="s2">, </span><span class="s3">0.8</span><span class="s1">*radius+label_y_shift</span><span class="s2">,</span>
+         <span class="s4">r'({}, {})'</span><span class="s1">.format(int(</span><span class="s3">0.6</span><span class="s1">*radius)</span><span class="s2">, </span><span class="s1">int(</span><span class="s3">0.8</span><span class="s1">*radius))</span><span class="s2">,</span>
+         <span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.scatter(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">radius</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.text(label_x_shift</span><span class="s2">, </span><span class="s1">radius+label_y_shift</span><span class="s2">, </span><span class="s4">r'(0, {})'</span><span class="s1">.format(int(radius))</span><span class="s2">,</span>
+         <span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.scatter(-</span><span class="s3">0.6</span><span class="s1">*radius</span><span class="s2">, </span><span class="s3">0.8</span><span class="s1">*radius</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s1">plt.text(-</span><span class="s3">0.6</span><span class="s1">*radius-label_x_shift</span><span class="s2">, </span><span class="s3">0.8</span><span class="s1">*radius+label_y_shift</span><span class="s2">,</span>
+         <span class="s4">r'({}, {})'</span><span class="s1">.format(-int(</span><span class="s3">0.6</span><span class="s1">*radius)</span><span class="s2">, </span><span class="s1">int(</span><span class="s3">0.8</span><span class="s1">*radius))</span><span class="s2">,</span>
+         <span class="s1">color=</span><span class="s4">'orange'</span><span class="s2">, </span><span class="s1">ha=</span><span class="s4">'right'</span><span class="s1">)</span>
+
+<span class="s1">plt.show()</span>
+<hr class="ls0"><span class="s0">#%% md 
+</span>
+<span class="s1">### Solve for general conic coefficients using five points on circle 
+#### (10, 0), (8, 6), (6, 8), (0, 10), (-6, 8) 
+ 
+\begin{align*} 
+&amp;A x^2    + B xy            + C y^2  + D x   + E y  + F = 0 \\ 
+&amp;A 10^2   + B 10 \cdot 0    + C 0^2  + D 10  + E 0  + F = 0 \\ 
+&amp;A 8^2    + B 8 \cdot 6     + C 6^2  + D 8   + E 6  + F = 0 \\ 
+&amp;A 6^2    + B 6 \cdot 8     + C 8^2  + D 6   + E 8  + F = 0 \\ 
+&amp;A 0^2    + B 0 \cdot 10    + C 10^2 + D 0   + E 10 + F = 0 \\ 
+&amp;A (-6)^2 + B (-6) \cdot 8  + C 8^2  + D(-6) + E 8  + F = 0 \\ 
+\end{align*} 
+ 
+### Write system of six equations as matrix equation 
+$\rightarrow$ 
+\begin{pmatrix} 
+  x^2 &amp;  xy &amp; y^2 &amp;  x &amp;  y &amp; 1 \\ 
+  100 &amp;   0 &amp;   0 &amp; 10 &amp;  0 &amp; 1 \\ 
+   64 &amp;  48 &amp;  36 &amp;  8 &amp;  6 &amp; 1 \\ 
+   36 &amp;  48 &amp;  64 &amp;  6 &amp;  8 &amp; 1 \\ 
+    0 &amp;   0 &amp; 100 &amp;  0 &amp; 10 &amp; 1 \\ 
+   36 &amp; -48 &amp;  64 &amp; -6 &amp;  8 &amp; 1 \\ 
+\end{pmatrix} 
+\begin{pmatrix} A \\ B \\ C \\ D \\ E \\ F \\ \end{pmatrix} 
+$=$ 
+\begin{pmatrix} 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{pmatrix} 
+ 
+### To get non-trivial coefficient vector, determinant of multiplying matrix must be zero 
+$\rightarrow$ 
+$\det$ 
+\begin{pmatrix} 
+  x^2 &amp;  xy &amp; y^2 &amp;  x &amp;  y &amp; 1 \\ 
+  100 &amp;   0 &amp;   0 &amp; 10 &amp;  0 &amp; 1 \\ 
+   64 &amp;  48 &amp;  36 &amp;  8 &amp;  6 &amp; 1 \\ 
+   36 &amp;  48 &amp;  64 &amp;  6 &amp;  8 &amp; 1 \\ 
+    0 &amp;   0 &amp; 100 &amp;  0 &amp; 10 &amp; 1 \\ 
+   36 &amp; -48 &amp;  64 &amp; -6 &amp;  8 &amp; 1 \\ 
+\end{pmatrix} 
+$= 0$ 
+ 
+### Each conic coefficient equals the determinant of the minor matrix multiplying the corresponding polynomial term 
+$\rightarrow$ 
+$A = \det$ 
+\begin{pmatrix} 
+  0 &amp;   0 &amp; 10 &amp;  0 &amp; 1 \\ 
+ 48 &amp;  36 &amp;  8 &amp;  6 &amp; 1 \\ 
+ 48 &amp;  64 &amp;  6 &amp;  8 &amp; 1 \\ 
+  0 &amp; 100 &amp;  0 &amp; 10 &amp; 1 \\ 
+-48 &amp;  64 &amp; -6 &amp;  8 &amp; 1 \\ 
+\end{pmatrix} 
+ 
+$$\rightarrow B = \dots$$ 
+ <hr class="ls0"></span><span class="s0">#%% 
+</span>
+<span class="s1">coefficient_matrix = np.array([[</span><span class="s3">100</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">10</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span><span class="s2">,</span>
+                              <span class="s1">[</span><span class="s3">64</span><span class="s2">, </span><span class="s3">48</span><span class="s2">, </span><span class="s3">36</span><span class="s2">, </span><span class="s3">8</span><span class="s2">, </span><span class="s3">6</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span><span class="s2">,</span>
+                              <span class="s1">[</span><span class="s3">36</span><span class="s2">, </span><span class="s3">48</span><span class="s2">, </span><span class="s3">64</span><span class="s2">, </span><span class="s3">6</span><span class="s2">, </span><span class="s3">8</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span><span class="s2">,</span>
+                              <span class="s1">[</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">100</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s3">10</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span><span class="s2">,</span>
+                              <span class="s1">[</span><span class="s3">36</span><span class="s2">, </span><span class="s1">-</span><span class="s3">48</span><span class="s2">, </span><span class="s3">64</span><span class="s2">, </span><span class="s1">-</span><span class="s3">6</span><span class="s2">, </span><span class="s3">8</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]])</span>
+
+<span class="s1">x_squared_minor_matrix = coefficient_matrix[:</span><span class="s2">,</span><span class="s3">1</span><span class="s1">:]</span>
+<span class="s1">print(</span><span class="s4">r'det( {} ) = {:.0f}'</span><span class="s1">.format(x_squared_minor_matrix</span><span class="s2">, </span><span class="s1">np.linalg.det(x_squared_minor_matrix) ))</span>
+<span class="s1">print()</span>
+
+<span class="s1">xy_minor_matrix=np.append(coefficient_matrix[:</span><span class="s2">,</span><span class="s3">2</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">coefficient_matrix[:</span><span class="s2">,</span><span class="s3">0</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">1</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">)</span>
+<span class="s1">print(</span><span class="s4">r'det( {} ) = {:.0f}'</span><span class="s1">.format(xy_minor_matrix</span><span class="s2">, </span><span class="s1">np.linalg.det(xy_minor_matrix) ))</span>
+<span class="s1">print()</span>
+
+<span class="s1">y_squared_minor_matrix=np.append(coefficient_matrix[:</span><span class="s2">,</span><span class="s3">3</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">coefficient_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">2</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">2</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">)</span>
+<span class="s1">print(</span><span class="s4">r'det( {} ) = {:.0f}'</span><span class="s1">.format(y_squared_minor_matrix</span><span class="s2">, </span><span class="s1">np.linalg.det(y_squared_minor_matrix) ))</span>
+<span class="s1">print()</span>
+
+<span class="s1">x_minor_matrix=np.append(coefficient_matrix[:</span><span class="s2">,</span><span class="s3">4</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">coefficient_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">3</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">3</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">)</span>
+<span class="s1">print(</span><span class="s4">r'det( {} ) = {:.0f}'</span><span class="s1">.format(x_minor_matrix</span><span class="s2">, </span><span class="s1">np.linalg.det(x_minor_matrix) ))</span>
+<span class="s1">print()</span>
+
+<span class="s1">y_minor_matrix=np.append(coefficient_matrix[:</span><span class="s2">,</span><span class="s3">5</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">coefficient_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">4</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">4</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">)</span>
+<span class="s1">print(</span><span class="s4">r'det( {} ) = {:.0f}'</span><span class="s1">.format(y_minor_matrix</span><span class="s2">, </span><span class="s1">np.linalg.det(y_minor_matrix) ))</span>
+<span class="s1">print()</span>
+
+<span class="s1">one_minor_matrix = coefficient_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">5</span><span class="s1">]</span>
+<span class="s1">print(</span><span class="s4">r'det( {} ) = {:.0f}'</span><span class="s1">.format(one_minor_matrix</span><span class="s2">, </span><span class="s1">np.linalg.det(one_minor_matrix) ))</span>
+<span class="s1">print()</span>
+<hr class="ls0"><span class="s0">#%% md 
+</span>
+<span class="s1">$$\rightarrow 15360 x^2 + 15360 y^2 - 1536000 = 0 $$ 
+ 
+$$\rightarrow x^2 + y^2 - 100 = 0 $$ 
+ <hr class="ls0"></span><span class="s0">#%% md 
+</span>
+<span class="s1">*** 
+ 
+## Hyperbola 
+ 
+### Choose linear eccentricity and semimajor axis 
+$ c = 10, a = 8 $ 
+ 
+$\rightarrow b = 6 $ 
+ 
+### Equation for the x-y coordinates of this hyperbola 
+$\rightarrow \frac{x^2}{8^2} - \frac{y^2}{6^2} = 1$ 
+ 
+ 
+### Convert to standard conic form 
+$\rightarrow 36 x^2 - 64 y^2 = 36 \cdot 64 = 2304 $ 
+ 
+$\rightarrow 9 x^2 - 16 y^2 - 576 = 0$ 
+ <hr class="ls0"></span><span class="s0">#%% 
+</span>
+<span class="s0">#</span>
+<span class="s0">## Plot hyperbola</span>
+<span class="s0">#</span>
+<span class="s2">import </span><span class="s1">matplotlib.pyplot </span><span class="s2">as </span><span class="s1">plt</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+<span class="s2">from </span><span class="s1">draw_orbits </span><span class="s2">import </span><span class="s1">hyperbola</span>
+
+<span class="s0"># Calculate hyperbola values based on semi axes and an array of angles</span>
+<span class="s1">number_of_points = </span><span class="s3">100</span>
+<span class="s1">cutoff_angle = </span><span class="s3">0.20</span>
+<span class="s1">angles = np.array([</span>
+    <span class="s1">np.linspace(</span><span class="s3">0.00 </span><span class="s1">* </span><span class="s3">2 </span><span class="s1">* np.pi</span><span class="s2">, </span><span class="s1">(</span><span class="s3">0.00 </span><span class="s1">+ cutoff_angle) * </span><span class="s3">2 </span><span class="s1">* np.pi</span><span class="s2">, </span><span class="s1">num=number_of_points)</span><span class="s2">,</span>
+    <span class="s1">np.linspace((</span><span class="s3">0.50 </span><span class="s1">- cutoff_angle) * </span><span class="s3">2 </span><span class="s1">* np.pi</span><span class="s2">, </span><span class="s3">0.50 </span><span class="s1">* </span><span class="s3">2 </span><span class="s1">* np.pi</span><span class="s2">, </span><span class="s1">num=number_of_points)</span><span class="s2">,</span>
+    <span class="s1">np.linspace(</span><span class="s3">0.50 </span><span class="s1">* </span><span class="s3">2 </span><span class="s1">* np.pi</span><span class="s2">, </span><span class="s1">(</span><span class="s3">0.50 </span><span class="s1">+ cutoff_angle) * </span><span class="s3">2 </span><span class="s1">* np.pi</span><span class="s2">, </span><span class="s1">num=number_of_points)</span><span class="s2">,</span>
+    <span class="s1">np.linspace((</span><span class="s3">1.00 </span><span class="s1">- cutoff_angle) * </span><span class="s3">2 </span><span class="s1">* np.pi</span><span class="s2">, </span><span class="s3">1.00 </span><span class="s1">* </span><span class="s3">2 </span><span class="s1">* np.pi</span><span class="s2">, </span><span class="s1">num=number_of_points)</span>
+                   <span class="s1">])</span>
+<span class="s1">semimajor_axis = </span><span class="s3">8.</span>
+<span class="s1">semiminor_axis = </span><span class="s3">6.</span>
+
+<span class="s1">x_values</span><span class="s2">, </span><span class="s1">y_values = hyperbola(angles</span><span class="s2">, </span><span class="s1">semimajor_axis=semimajor_axis</span><span class="s2">, </span><span class="s1">semiminor_axis=semiminor_axis)</span>
+
+<span class="s1">interpolation_points = np.array(</span>
+    <span class="s1">[[</span><span class="s3">8</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[-</span><span class="s3">8</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">12</span><span class="s2">, </span><span class="s3">3 </span><span class="s1">* np.sqrt(</span><span class="s3">5</span><span class="s1">)]</span><span class="s2">, </span><span class="s1">[-</span><span class="s3">12</span><span class="s2">, </span><span class="s3">3 </span><span class="s1">* np.sqrt(</span><span class="s3">5</span><span class="s1">)]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">12</span><span class="s2">, </span><span class="s1">-</span><span class="s3">3 </span><span class="s1">* np.sqrt(</span><span class="s3">5</span><span class="s1">)]])</span>
+
+<span class="s0"># Choose plot parameters</span>
+<span class="s1">conic_color = </span><span class="s4">'blue'</span>
+<span class="s1">label_fontsize = </span><span class="s3">18</span>
+<span class="s1">label_x_shift = np.max(x_values)*</span><span class="s3">0.01</span>
+<span class="s1">label_y_shift = np.max(y_values)*</span><span class="s3">0.05</span>
+
+<span class="s0"># Plot hyperbola</span>
+<span class="s2">for </span><span class="s1">index </span><span class="s2">in </span><span class="s1">np.arange(angles.shape[</span><span class="s3">0</span><span class="s1">]):</span>
+    <span class="s1">plt.plot(x_values[index]</span><span class="s2">, </span><span class="s1">y_values[index]</span><span class="s2">, </span><span class="s1">color=conic_color)</span>
+<span class="s1">plt.xlim([-</span><span class="s3">2</span><span class="s1">*semimajor_axis</span><span class="s2">, </span><span class="s3">2</span><span class="s1">*semimajor_axis])</span>
+<span class="s1">plt.ylim([-</span><span class="s3">2</span><span class="s1">*semiminor_axis</span><span class="s2">, </span><span class="s3">2</span><span class="s1">*semiminor_axis])</span>
+
+<span class="s0"># Label hyperbola</span>
+<span class="s1">plt.plot([</span><span class="s3">0</span><span class="s2">,</span><span class="s1">semimajor_axis]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'black'</span><span class="s2">, </span><span class="s1">linestyle=</span><span class="s4">'--'</span><span class="s1">)</span>
+<span class="s1">plt.text(</span><span class="s3">0.5</span><span class="s1">*semimajor_axis</span><span class="s2">, </span><span class="s1">label_y_shift</span><span class="s2">, </span><span class="s4">r'$a = {} $'</span><span class="s1">.format(int(semimajor_axis))</span><span class="s2">,</span>
+          <span class="s1">fontsize=label_fontsize</span><span class="s2">, </span><span class="s1">ha=</span><span class="s4">'center'</span><span class="s1">)</span>
+<span class="s1">plt.plot([</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">0</span><span class="s2">, </span><span class="s1">semiminor_axis]</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'black'</span><span class="s2">, </span><span class="s1">linestyle=</span><span class="s4">'--'</span><span class="s1">)</span>
+<span class="s1">plt.text(-label_x_shift</span><span class="s2">, </span><span class="s3">0.5</span><span class="s1">*semiminor_axis</span><span class="s2">, </span><span class="s4">r'$b = {} $'</span><span class="s1">.format(int(semiminor_axis))</span><span class="s2">,</span>
+          <span class="s1">fontsize=label_fontsize</span><span class="s2">, </span><span class="s1">ha=</span><span class="s4">'right'</span><span class="s2">, </span><span class="s1">va=</span><span class="s4">'center'</span><span class="s1">)</span>
+
+<span class="s0"># Plot and label two points on hyperbola</span>
+<span class="s1">plt.scatter(interpolation_points[:</span><span class="s2">,</span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">interpolation_points[:</span><span class="s2">,</span><span class="s3">1</span><span class="s1">]</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s2">for </span><span class="s1">index </span><span class="s2">in </span><span class="s1">np.arange(interpolation_points.shape[</span><span class="s3">0</span><span class="s1">]):</span>
+    <span class="s1">x_coordinate</span><span class="s2">, </span><span class="s1">y_coordinate = interpolation_points[index][</span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">interpolation_points[index][</span><span class="s3">1</span><span class="s1">]</span>
+    <span class="s1">plt.text(x_coordinate + label_x_shift</span><span class="s2">, </span><span class="s1">y_coordinate</span><span class="s2">, </span><span class="s4">r'({:.1f}, {:.1f})'</span><span class="s1">.format(x_coordinate</span><span class="s2">, </span><span class="s1">y_coordinate)</span><span class="s2">,</span>
+             <span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+
+<span class="s0"># Show the plot</span>
+<span class="s1">plt.show()</span>
+
+<span class="s1">interpolation_matrix = np.array([interpolation_points[:</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]**</span><span class="s3">2</span><span class="s2">,</span>
+                                 <span class="s1">interpolation_points[:</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]*interpolation_points[:</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span><span class="s2">,</span>
+                                 <span class="s1">interpolation_points[:</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]**</span><span class="s3">2</span><span class="s2">,</span>
+                                 <span class="s1">interpolation_points[:</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">,</span>
+                                 <span class="s1">interpolation_points[:</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span><span class="s2">,</span>
+                                 <span class="s1">np.ones(len(interpolation_points[:</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]))</span>
+                                 <span class="s1">]).transpose()</span>
+
+<span class="s1">A = np.linalg.det(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">1</span><span class="s1">:])</span>
+<span class="s1">B = np.linalg.det(np.append(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">2</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">interpolation_matrix[:</span><span class="s2">,</span><span class="s3">0</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">1</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">))</span>
+<span class="s1">C = np.linalg.det(np.append(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">3</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">interpolation_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">2</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">2</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">))</span>
+<span class="s1">D = np.linalg.det(np.append(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">4</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">interpolation_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">3</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">3</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">))</span>
+<span class="s1">E = np.linalg.det(np.append(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">5</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">interpolation_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">4</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">4</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">))</span>
+<span class="s1">F = np.linalg.det(interpolation_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">5</span><span class="s1">])</span>
+<hr class="ls0"><span class="s0">#%% md 
+</span>
+<span class="s1">### Calculate standard conic coefficients from determinants of minor matrices using five points 
+ <hr class="ls0"></span><span class="s0">#%% 
+</span>
+<span class="s1">print(</span><span class="s4">'A, B, C, D, E, F = {:.0f}, {:.0f}, {:.0f}, {:.0f}, {:.0f}, {:.0f}'</span><span class="s1">.format(A</span><span class="s2">, </span><span class="s1">B</span><span class="s2">, </span><span class="s1">C</span><span class="s2">, </span><span class="s1">D</span><span class="s2">, </span><span class="s1">E</span><span class="s2">, </span><span class="s1">F) )</span>
+
+<span class="s1">print(</span><span class="s4">'9 C/A = {}, 9 F/A = {}'</span><span class="s1">.format(int(np.round(</span><span class="s3">9</span><span class="s1">*(C/A)))</span><span class="s2">, </span><span class="s1">int(np.round(</span><span class="s3">9</span><span class="s1">*(F/A)))))</span>
+
+<hr class="ls0"><span class="s0">#%% md 
+</span>
+<span class="s1">$\rightarrow 1555200 x^2 - 2764800 y^2 - 99532800 = 0$ 
+ 
+$\rightarrow 9 x^2 - 16 y^2 - 576 = 0$ 
+ 
+ <hr class="ls0"></span><span class="s0">#%% md 
+</span>
+<span class="s1">*** 
+ 
+## Parabola 
+ 
+### Choose vertex and focus 
+ 
+V: $(-3, -4)$, F: $(-\frac{9}{4}, -3)$ 
+ 
+$\rightarrow$ focal length: $\frac{p}{2} = \sqrt{(-3 - -\frac{9}{4})^2 + (-4 - -3)^2} = \frac{5}{4}$ 
+ 
+$\rightarrow$ axis of symmetry: $y = \frac{4}{3}x$ 
+ 
+$\rightarrow$ directrix: $y = -\frac{3}{4}x - \frac{125}{16}$ 
+$\rightarrow$ $12 x + 16 y + 125 = 0$ 
+ 
+### General conic form 
+$\rightarrow$ $\frac{(12 x + 16 y + 125)^2}{12^2 + 16^2} = (x - \left(-\frac{9}{4}\right)^2)^2 + (y - (-3)^2)^2$ 
+ 
+$\rightarrow$ $\frac{144 x^2 + 384 xy + 256 y^2 + 3000 x + 4000 y + 15625}{400} = (x^2 - \frac{81}{8}x + 
+\frac{6561}{256}) + (y^2 -18 y + 81)$ 
+ 
+$\rightarrow$ $16(144 x^2 + 384 xy + 256 y^2 + 3000 x + 4000 y + 15625) = 6400 x^2 - 64800 x + 164025 + 6400 y^2 - 
+115200 y + 518400$ 
+ 
+$\rightarrow$ $4096 x^2 -6144 x y  + 2304 y^2  -112800 x -179200 y  + 432425 = 0 $ 
+ 
+$16 x^2 - 24 x y + 9 y^2 - 75 x - 100 y - 625 = 0$ 
+ <hr class="ls0"></span><span class="s0">#%% 
+</span>
+<span class="s0">#</span>
+<span class="s0">## Plot parabola</span>
+<span class="s0">#</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+<span class="s2">import </span><span class="s1">matplotlib.pyplot </span><span class="s2">as </span><span class="s1">plt</span>
+
+<span class="s1">figure</span><span class="s2">, </span><span class="s1">axes = plt.subplots()</span>
+<span class="s0"># Choose plot parameters</span>
+<span class="s1">conic_color = </span><span class="s4">'blue'</span>
+<span class="s1">label_fontsize = </span><span class="s3">18</span>
+<span class="s1">number_of_points = </span><span class="s3">1000</span>
+<span class="s1">x_maximum = </span><span class="s3">50.</span>
+
+<span class="s0"># Choose domain x &gt;= -13/3</span>
+<span class="s1">x_values = np.linspace(-</span><span class="s3">13</span><span class="s1">/</span><span class="s3">3</span><span class="s2">, </span><span class="s1">x_maximum</span><span class="s2">, </span><span class="s1">number_of_points)</span>
+
+<span class="s0"># Define particular parabola</span>
+<span class="s2">def </span><span class="s1">parabola(x):</span>
+    <span class="s2">return </span><span class="s1">(</span><span class="s3">50 </span><span class="s1">+ </span><span class="s3">12</span><span class="s1">*x - </span><span class="s3">25</span><span class="s1">*np.sqrt(</span><span class="s3">13 </span><span class="s1">+ </span><span class="s3">3</span><span class="s1">*x) )/</span><span class="s3">9</span><span class="s2">, </span><span class="s1">(</span><span class="s3">50 </span><span class="s1">+ </span><span class="s3">12</span><span class="s1">*x + </span><span class="s3">25</span><span class="s1">*np.sqrt(</span><span class="s3">13 </span><span class="s1">+ </span><span class="s3">3</span><span class="s1">*x))/</span><span class="s3">9</span>
+
+<span class="s0"># Calculate parabola over domain</span>
+<span class="s1">y_values_minus</span><span class="s2">, </span><span class="s1">y_values_plus = parabola(x_values)</span>
+
+<span class="s1">label_x_shift = np.max(x_values)*</span><span class="s3">0.01</span>
+<span class="s1">label_y_shift = np.max(y_values_plus)*</span><span class="s3">0.05</span>
+
+<span class="s0"># Plot parabola</span>
+<span class="s1">axes.plot(x_values</span><span class="s2">, </span><span class="s1">y_values_plus</span><span class="s2">, </span><span class="s1">color=conic_color)</span>
+<span class="s1">axes.plot(x_values</span><span class="s2">, </span><span class="s1">y_values_minus</span><span class="s2">, </span><span class="s1">color=conic_color)</span>
+
+<span class="s0"># Set points to interpolate</span>
+<span class="s1">interpolation_points = np.array(</span>
+    <span class="s1">[[</span><span class="s3">4</span><span class="s2">, </span><span class="s1">-</span><span class="s3">3</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">17</span><span class="s2">, </span><span class="s3">6</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">1</span><span class="s2">, </span><span class="s3">18</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">12</span><span class="s2">, </span><span class="s3">41</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">36</span><span class="s2">, </span><span class="s3">23</span><span class="s1">]])</span>
+
+<span class="s0"># Plot and label five points on parabola</span>
+<span class="s1">axes.scatter(interpolation_points[:</span><span class="s2">,</span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">interpolation_points[:</span><span class="s2">,</span><span class="s3">1</span><span class="s1">]</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+<span class="s2">for </span><span class="s1">index </span><span class="s2">in </span><span class="s1">np.arange(interpolation_points.shape[</span><span class="s3">0</span><span class="s1">]):</span>
+    <span class="s1">x_coordinate</span><span class="s2">, </span><span class="s1">y_coordinate = interpolation_points[index][</span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">interpolation_points[index][</span><span class="s3">1</span><span class="s1">]</span>
+    <span class="s1">axes.text(x_coordinate + label_x_shift</span><span class="s2">, </span><span class="s1">y_coordinate</span><span class="s2">, </span><span class="s4">r'({:.0f}, {:.0f})'</span><span class="s1">.format(x_coordinate</span><span class="s2">, </span><span class="s1">y_coordinate)</span><span class="s2">,</span>
+             <span class="s1">color=</span><span class="s4">'orange'</span><span class="s1">)</span>
+
+<span class="s0"># Label parabola</span>
+<span class="s1">focus_coordinates = np.array([-</span><span class="s3">9</span><span class="s1">/</span><span class="s3">4</span><span class="s2">, </span><span class="s1">-</span><span class="s3">3</span><span class="s1">])</span>
+<span class="s1">latus_rectum_x_values = np.linspace(-</span><span class="s3">17</span><span class="s1">/</span><span class="s3">4</span><span class="s2">, </span><span class="s1">-</span><span class="s3">1</span><span class="s1">/</span><span class="s3">4</span><span class="s1">)</span>
+<span class="s1">latus_rectum_y_values = -(</span><span class="s3">3</span><span class="s1">/</span><span class="s3">4</span><span class="s1">)*latus_rectum_x_values -(</span><span class="s3">75</span><span class="s1">/</span><span class="s3">16</span><span class="s1">)</span>
+<span class="s1">axes.plot(latus_rectum_x_values</span><span class="s2">, </span><span class="s1">latus_rectum_y_values</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'black'</span><span class="s2">, </span><span class="s1">linestyle=</span><span class="s4">'--'</span><span class="s1">)</span>
+<span class="s1">axes.text(focus_coordinates[</span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">focus_coordinates[</span><span class="s3">1</span><span class="s1">]+</span><span class="s3">0.1</span><span class="s1">*label_y_shift</span><span class="s2">, </span><span class="s4">r'$p = {} $'</span><span class="s1">.format(</span><span class="s3">2.5</span><span class="s1">)</span><span class="s2">,</span>
+         <span class="s1">fontsize=</span><span class="s3">12</span><span class="s2">, </span><span class="s1">ha=</span><span class="s4">'left'</span><span class="s2">, </span><span class="s1">va=</span><span class="s4">'bottom'</span><span class="s1">)</span>
+<span class="s1">axes.scatter(focus_coordinates[</span><span class="s3">0</span><span class="s1">]</span><span class="s2">, </span><span class="s1">focus_coordinates[</span><span class="s3">1</span><span class="s1">]</span><span class="s2">, </span><span class="s1">color=</span><span class="s4">'black'</span><span class="s1">)</span>
+
+<span class="s0"># Set limits</span>
+<span class="s0">#plt.xlim([-10, 50])</span>
+<span class="s0">#plt.ylim([-10, 50])</span>
+<span class="s1">plt.xlim([-</span><span class="s3">5</span><span class="s2">,</span><span class="s3">45</span><span class="s1">])</span>
+<span class="s1">plt.ylim([-</span><span class="s3">5</span><span class="s2">,</span><span class="s3">45</span><span class="s1">])</span>
+<span class="s1">axes.set_aspect(</span><span class="s4">'equal'</span><span class="s1">)</span>
+
+<span class="s1">plt.show()</span>
+<hr class="ls0"><span class="s0">#%% 
+</span>
+<span class="s2">import </span><span class="s1">numpy </span><span class="s2">as </span><span class="s1">np</span>
+
+<span class="s1">interpolation_points = np.array(</span>
+    <span class="s1">[[</span><span class="s3">4</span><span class="s2">, </span><span class="s1">-</span><span class="s3">3</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">17</span><span class="s2">, </span><span class="s3">6</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">1</span><span class="s2">, </span><span class="s3">18</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">12</span><span class="s2">, </span><span class="s3">41</span><span class="s1">]</span><span class="s2">, </span><span class="s1">[</span><span class="s3">36</span><span class="s2">, </span><span class="s3">23</span><span class="s1">]])</span>
+
+<span class="s1">interpolation_matrix = np.array([interpolation_points[:</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]**</span><span class="s3">2</span><span class="s2">,</span>
+                                 <span class="s1">interpolation_points[:</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]*interpolation_points[:</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span><span class="s2">,</span>
+                                 <span class="s1">interpolation_points[:</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]**</span><span class="s3">2</span><span class="s2">,</span>
+                                 <span class="s1">interpolation_points[:</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]</span><span class="s2">,</span>
+                                 <span class="s1">interpolation_points[:</span><span class="s2">, </span><span class="s3">1</span><span class="s1">]</span><span class="s2">,</span>
+                                 <span class="s1">np.ones(len(interpolation_points[:</span><span class="s2">, </span><span class="s3">0</span><span class="s1">]))</span>
+                                 <span class="s1">]).transpose()</span>
+
+<span class="s1">A = np.linalg.det(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">1</span><span class="s1">:])</span>
+<span class="s1">B = np.linalg.det(np.append(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">2</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">interpolation_matrix[:</span><span class="s2">,</span><span class="s3">0</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">1</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">))</span>
+<span class="s1">C = np.linalg.det(np.append(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">3</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">interpolation_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">2</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">2</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">))</span>
+<span class="s1">D = np.linalg.det(np.append(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">4</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">interpolation_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">3</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">3</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">))</span>
+<span class="s1">E = np.linalg.det(np.append(interpolation_matrix[:</span><span class="s2">,</span><span class="s3">5</span><span class="s1">:]</span><span class="s2">, </span><span class="s1">interpolation_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">4</span><span class="s1">].reshape(</span><span class="s3">5</span><span class="s2">,</span><span class="s3">4</span><span class="s1">)</span><span class="s2">, </span><span class="s1">axis=</span><span class="s3">1</span><span class="s1">))</span>
+<span class="s1">F = np.linalg.det(interpolation_matrix[:</span><span class="s2">,</span><span class="s1">:</span><span class="s3">5</span><span class="s1">])</span>
+
+<span class="s1">print(</span><span class="s4">'A, B, C, D, E, F = {:.0f}, {:.0f}, {:.0f}, {:.0f}, {:.0f}, {:.0f}'</span><span class="s1">.format(A</span><span class="s2">, </span><span class="s1">B</span><span class="s2">, </span><span class="s1">C</span><span class="s2">, </span><span class="s1">D</span><span class="s2">, </span><span class="s1">E</span><span class="s2">, </span><span class="s1">F) )</span>
+<span class="s1">print()</span>
+<span class="s1">reduction_factor = A/</span><span class="s3">16</span>
+<span class="s1">print(</span><span class="s4">'A/16 = {:.0f}'</span><span class="s1">.format(reduction_factor))</span>
+<span class="s1">print()</span>
+<span class="s1">A /= reduction_factor</span>
+<span class="s1">B /= reduction_factor</span>
+<span class="s1">C /= reduction_factor</span>
+<span class="s1">D /= reduction_factor</span>
+<span class="s1">E /= reduction_factor</span>
+<span class="s1">F /= reduction_factor</span>
+<span class="s1">print(</span><span class="s4">'(A, B, C, D, E, F)/(A/16) = {:.0f}, {:.0f}, {:.0f}, {:.0f}, {:.0f}, {:.0f}'</span><span class="s1">.format(A</span><span class="s2">, </span><span class="s1">B</span><span class="s2">, </span><span class="s1">C</span><span class="s2">, </span><span class="s1">D</span><span class="s2">, </span><span class="s1">E</span><span class="s2">, </span><span class="s1">F) )</span>
+<span class="s1">print()</span>
+<span class="s1">discriminant = B**</span><span class="s3">2 </span><span class="s1">- </span><span class="s3">4</span><span class="s1">*A*C</span>
+<span class="s1">print(</span><span class="s4">'B^2 - 4*A*C = {:.0f} --&gt; parabola'</span><span class="s1">.format(discriminant))</span>
+
+</pre>
+</body>
+</html>
